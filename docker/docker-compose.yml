@@ -83,9 +83,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    ports:
-      - ${KONG_HTTP_PORT}:8000/tcp
-      - ${KONG_HTTPS_PORT}:8443/tcp
+
     volumes:
       # https://github.com/supabase/supabase/issues/12661
       - ./volumes/api/kong.yml:/home/kong/temp.yml:ro,z
@@ -446,8 +444,6 @@ services:
     container_name: supabase-analytics
     image: supabase/logflare:1.31.2
     restart: unless-stopped
-    # ports:
-    #   - 4000:4000
     # Uncomment to use Big Query backend for analytics
     # volumes:
     #   - type: bind
@@ -579,9 +575,7 @@ services:
     container_name: supabase-pooler
     image: supabase/supavisor:2.7.4
     restart: unless-stopped
-    ports:
-      - ${POSTGRES_PORT}:5432
-      - ${POOLER_PROXY_PORT_TRANSACTION}:6543
+
     volumes:
       - ./volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro,z
     healthcheck:
