@@ -85,10 +85,8 @@ services:
       retries: 5
 
     volumes:
-      # https://github.com/supabase/supabase/issues/12661
-      #- ./volumes/api/kong.yml:/home/kong/temp.yml:ro,z
-      - ./kong.yml:/usr/local/kong/kong.yml:ro
-      #- ./volumes/api/kong-entrypoint.sh:/home/kong/kong-entrypoint.sh:ro,z
+      - ./volumes/api/kong.yml:/home/kong/temp.yml:ro,z
+      - ./volumes/api/kong-entrypoint.sh:/home/kong/kong-entrypoint.sh:ro,z
       #- ./volumes/api/server.crt:/home/kong/server.crt:ro
       #- ./volumes/api/server.key:/home/kong/server.key:ro
     environment:
@@ -109,7 +107,7 @@ services:
       SERVICE_ROLE_KEY_ASYMMETRIC: ${SERVICE_ROLE_KEY_ASYMMETRIC:-}
       DASHBOARD_USERNAME: ${DASHBOARD_USERNAME}
       DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
-    #entrypoint: /home/kong/kong-entrypoint.sh
+    entrypoint: /home/kong/kong-entrypoint.sh
 
   auth:
     #container_name: supabase-auth
