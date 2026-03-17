@@ -83,10 +83,10 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
+    command: ["kong", "docker-start"]
     volumes:
       - ./volumes/api/kong.yml:/home/kong/temp.yml:ro,z
-      - ./volumes/api/kong-entrypoint.sh:/home/kong/kong-entrypoint.sh:ro,z
+      #- ./volumes/api/kong-entrypoint.sh:/home/kong/kong-entrypoint.sh:ro,z
       #- ./volumes/api/server.crt:/home/kong/server.crt:ro
       #- ./volumes/api/server.key:/home/kong/server.key:ro
     environment:
@@ -107,7 +107,7 @@ services:
       SERVICE_ROLE_KEY_ASYMMETRIC: ${SERVICE_ROLE_KEY_ASYMMETRIC:-}
       DASHBOARD_USERNAME: ${DASHBOARD_USERNAME}
       DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
-    entrypoint: /home/kong/kong-entrypoint.sh
+    #entrypoint: /home/kong/kong-entrypoint.sh
 
   auth:
     #container_name: supabase-auth
