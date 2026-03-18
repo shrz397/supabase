@@ -1,4 +1,4 @@
-_format_version: '2.1'
+_format_version: "2.1"
 _transform: true
 
 consumers:
@@ -10,98 +10,46 @@ consumers:
     keyauth_credentials:
       - key: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc3Mzc1Njk2MCwiZXhwIjo0OTI5NDMwNTYwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.4L3OvbLMK-h3RWnHXHLkHN31aoMhSuO4AGnGInf5Gmw
 
-acls:
-  - consumer: anon
-    group: anon
-  - consumer: service_role
-    group: admin
-
-basicauth_credentials:
-  - consumer: DASHBOARD
-    username: 'nhzWo1CMO9uZYKLl'
-    password: 'z6DdvYdZmJxzOc4j5EeWYhzhIE6d3KCW'
-
 services:
-  - name: auth-v1-open
-    url: http://auth:9999/verify
+  - name: auth
+    url: http://auth:9999
     routes:
-      - name: auth-v1-open
-        strip_path: true
+      - name: auth-route
         paths:
-          - /auth/v1/verify
-    plugins:
-      - name: cors
-  - name: auth-v1-open-callback
-    url: http://auth:9999/callback
+          - /auth/v1
+  - name: rest
+    url: http://rest:3000
     routes:
-      - name: auth-v1-open-callback
-        strip_path: true
+      - name: rest-route
         paths:
-          - /auth/v1/callback
-    plugins:
-      - name: cors
-  - name: auth-v1
-    url: http://auth:9999/
+          - /rest/v1
+  - name: storage
+    url: http://storage:5000
     routes:
-      - name: auth-v1-all
-        strip_path: true
+      - name: storage-route
         paths:
-          - /auth/v1/
-    plugins:
-      - name: cors
-      - name: key-auth
-      - name: request-transformer
-        config:
-          replace:
-            headers:
-              - "Authorization: return 'Bearer ' .. (kong.request.get_header('apikey') or '')"
-      - name: acl
-        config:
-          allow: [admin, anon]
-
-  - name: rest-v1
-    url: http://rest:3000/
+          - /storage/v1
+  - name: studio
+    url: http://studio:3000
     routes:
-      - name: rest-v1-all
-        strip_path: true
-        paths:
-          - /rest/v1/
-    plugins:
-      - name: cors
-      - name: key-auth
-      - name: request-transformer
-        config:
-          replace:
-            headers:
-              - "Authorization: return 'Bearer ' .. (kong.request.get_header('apikey') or '')"
-      - name: acl
-        config:
-          allow: [admin, anon]
-
-  - name: storage-v1
-    url: http://storage:5000/
-    routes:
-      - name: storage-v1-all
-        strip_path: true
-        paths:
-          - /storage/v1/
-    plugins:
-      - name: cors
-      - name: request-transformer
-        config:
-          replace:
-            headers:
-              - "Authorization: return 'Bearer ' .. (kong.request.get_header('apikey') or '')"
-
-  - name: dashboard
-    url: http://studio:3000/
-    routes:
-      - name: dashboard-all
-        strip_path: true
+      - name: studio-route
         paths:
           - /
-    plugins:
-      - name: cors
-      - name: basic-auth
-        config:
-          hide_credentials: true
+
+plugins:
+  - name: cors
+    config:
+      origins:
+        - "*"
+      methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - OPTIONS
+      headers:
+        - authorization
+        - apikey
+        - content-type
+        - x-client-info
