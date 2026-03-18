@@ -84,15 +84,50 @@ services:
       timeout: 5s
       retries: 5
     command: ["kong", "docker-start"]
-    volumes:
+    #volumes:
       #- ./volumes/api/kong.yml:/home/kong/temp.yml:ro,z
-      - ./kong.yml:/usr/local/kong/kong.yml:ro
+      #- ./kong.yml:/usr/local/kong/kong.yml:ro
       #- ./volumes/api/kong-entrypoint.sh:/home/kong/kong-entrypoint.sh:ro,z
       #- ./volumes/api/server.crt:/home/kong/server.crt:ro
       #- ./volumes/api/server.key:/home/kong/server.key:ro
     environment:
       KONG_DATABASE: "off"
-      KONG_DECLARATIVE_CONFIG: /usr/local/kong/kong.yml
+      
+      KONG_DECLARATIVE_CONFIG_STRING: |
+        _format_version: "1.1"
+        services:
+          - name: auth
+            url: http://auth:9999
+            routes:
+              - name: auth-route
+                paths:
+                  - /auth/v1
+          - name: rest
+            url: http://rest:3000
+            routes:
+              - name: rest-route
+                paths:
+                  - /rest/v1
+          - name: storage
+            url: http://storage:5000
+            routes:
+              - name: storage-route
+                paths:
+                  - /storage/v1
+          - name: studio
+            url: http://studio:3000
+            routes:
+              - name: studio-route
+                paths:
+                  - /
+
+
+
+
+
+
+
+      #KONG_DECLARATIVE_CONFIG: /usr/local/kong/kong.yml
       # https://github.com/supabase/cli/issues/14
       KONG_DNS_ORDER: LAST,A,CNAME
       KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth,request-termination,ip-restriction,post-function
