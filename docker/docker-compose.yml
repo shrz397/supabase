@@ -85,7 +85,8 @@ services:
       retries: 5
     command: ["kong", "docker-start"]
     volumes:
-      - ./volumes/api/kong.yml:/home/kong/temp.yml:ro,z
+      #- ./volumes/api/kong.yml:/home/kong/temp.yml:ro,z
+      - ./kong.yml:/usr/local/kong/kong.yml:ro
       #- ./volumes/api/kong-entrypoint.sh:/home/kong/kong-entrypoint.sh:ro,z
       #- ./volumes/api/server.crt:/home/kong/server.crt:ro
       #- ./volumes/api/server.key:/home/kong/server.key:ro
